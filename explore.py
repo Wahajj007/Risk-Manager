@@ -1,4 +1,6 @@
 ﻿import pandas as pd
+from sklearn.model_selection import train_test_split
+
 
 df = pd.read_csv('data/creditcard.csv')
 
@@ -45,18 +47,15 @@ df['Cohort'] = df['AmountTier'] + '_' + df['TimePeriod']
 
 print(df['Cohort'].value_counts())
 
-from sklearn.model_selection import train_test_split
 
-# Only non-fraud transactions can be used to learn "normal" baselines
+
 normal_df = df[df['Class'] == 0].copy()
 fraud_df = df[df['Class'] == 1].copy()
 
-# Split normal transactions: most go into baseline-building, some held out for testing
 normal_train, normal_test = train_test_split(normal_df, test_size=0.2, random_state=42)
-
-# Test set = held-out normal transactions + ALL fraud transactions
 test_df = pd.concat([normal_test, fraud_df], ignore_index=True)
 
-print("Baseline (normal_train):", normal_train.shape)
-print("Test set:", test_df.shape)
-print(test_df['Class'].value_counts())
+normal_train.to_csv('data/normal_train.csv', index=False)
+test_df.to_csv('data/test_df.csv', index=False)
+print("Saved splits to data/")
+
