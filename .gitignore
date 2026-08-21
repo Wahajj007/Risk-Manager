@@ -1,4 +1,9 @@
-﻿data/*.csv
+﻿# Raw and processed datasets 
+data/*.csv
+
+# Python cache files
 __pycache__/
 *.pyc
+
+# Virtual environment folder
 .venv/
