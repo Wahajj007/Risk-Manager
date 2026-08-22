@@ -123,3 +123,5 @@ robust_dist_for_outlier = np.sqrt(mcd_contaminated.mahalanobis(outlier_point.res
 
 print(f"Naive distance for an INJECTED OUTLIER (contaminated baseline): {naive_dist_for_outlier:.3f}")
 print(f"Robust distance for the SAME injected outlier (contaminated baseline): {robust_dist_for_outlier:.3f}")
+test_df.to_csv('data/test_df_scored.csv', index=False)
+print("Saved scored test set to data/test_df_scored.csv")
