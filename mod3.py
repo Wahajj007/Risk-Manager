@@ -5,6 +5,7 @@ from scipy.linalg import inv
 from sklearn.covariance import MinCovDet
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
+from sklearn.calibration import CalibratedClassifierCV, calibration_curve
 
 test_df = pd.read_csv('data/test_df_scored.csv')
 
@@ -63,12 +64,24 @@ y_train = model_train_df['Class']
 
 clf = LogisticRegression(class_weight='balanced', random_state=42, max_iter=1000)
 clf.fit(X_train, y_train)
-
 print("Model trained.")
 print("Coefficients:", dict(zip(model_features, clf.coef_[0])))
 print("Intercept:", clf.intercept_[0])
 
+# Define X_final_test BEFORE using it anywhere below
 X_final_test = final_test_df[model_features].fillna(final_test_df[model_features].median())
+
+calibrated_clf = CalibratedClassifierCV(clf, method='sigmoid', cv=5)
+calibrated_clf.fit(X_train, y_train)
+
+final_test_df['CalibratedFraudProbability'] = calibrated_clf.predict_proba(X_final_test)[:, 1]
+
+prob_true_cal, prob_pred_cal = calibration_curve(
+    final_test_df['Class'], final_test_df['CalibratedFraudProbability'], n_bins=10, strategy='quantile'
+)
+for pt, pp in zip(prob_true_cal, prob_pred_cal):
+    print(f"Calibrated predicted ~{pp:.3f} -> Actual fraud rate: {pt:.3f}")
+
 final_test_df['FraudProbability'] = clf.predict_proba(X_final_test)[:, 1]
 
 print(final_test_df.groupby('Class')['FraudProbability'].describe())
