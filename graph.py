@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import networkx as nx
 from sklearn.metrics.pairwise import euclidean_distances
+import matplotlib.pyplot as plt
 
 
 test_df = pd.read_csv('data/test_df_scored.csv')
@@ -67,3 +68,25 @@ community_stats['fraud_rate'] = community_stats['fraud_count'] / community_stats
 # Sort by fraud rate, show the most concentrated communities with meaningful size
 community_stats_sorted = community_stats[community_stats['size'] >= 5].sort_values('fraud_rate', ascending=False)
 print(community_stats_sorted.head(20))
+
+# Use a layout that naturally separates connected clusters
+pos = nx.spring_layout(G, seed=42, k=0.15, iterations=50)
+
+fig, ax = plt.subplots(figsize=(14, 14))
+
+# Color nodes by actual fraud label (ground truth) - this is your validation view
+node_colors = ['red' if anomalous_df.loc[i, 'Class'] == 1 else 'lightblue' for i in G.nodes()]
+node_sizes = [30 if anomalous_df.loc[i, 'Class'] == 1 else 15 for i in G.nodes()]
+
+nx.draw_networkx_nodes(G, pos, node_color=node_colors, node_size=node_sizes, alpha=0.8, ax=ax)
+nx.draw_networkx_edges(G, pos, alpha=0.1, width=0.5, ax=ax)
+
+ax.set_title('Transaction Similarity Graph — Red = Confirmed Fraud, Blue = Normal\n'
+             '(Top 5% most anomalous transactions, edges = high feature similarity)',
+             fontsize=14)
+ax.axis('off')
+
+plt.tight_layout()
+plt.savefig('fraud_ring_graph.png', dpi=150, bbox_inches='tight')
+print("Saved fraud_ring_graph.png")
+plt.close()
