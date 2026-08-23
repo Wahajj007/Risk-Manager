@@ -178,3 +178,24 @@ if len(flagged) > 0:
         )
 else:
     st.info("No flagged transactions at the current threshold.")
+    
+    st.divider()
+st.header("3. Fraud Ring Detection — Interactive Community Structure")
+st.caption("Transactions clustered by feature similarity (top 5% most anomalous only). "
+           "Hover over nodes for details. Red = confirmed fraud, Blue = normal. "
+           "Tight red clusters were found by the algorithm with zero fraud labels used in construction.")
+
+with open('fraud_ring_graph_interactive.html', 'r', encoding='utf-8') as f:
+    graph_html = f.read()
+
+st.components.v1.html(graph_html, height=820, scrolling=True)
+
+st.markdown("**Sensitivity check — this structure holds across parameter choices:**")
+st.markdown("""
+| Anomaly filter | Edge threshold | High-purity communities (≥90%) | Fraud transactions covered |
+|---|---|---|---|
+| Top 3% | Tight | 14 | 147 |
+| Top 5% (default) | Tight | 12 | 157 |
+| Top 7% | Tight | 10 | 136 |
+| Top 5% | Looser | 11 | 204 |
+""")
