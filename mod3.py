@@ -6,6 +6,7 @@ from sklearn.covariance import MinCovDet
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.calibration import CalibratedClassifierCV, calibration_curve
+import joblib
 
 test_df = pd.read_csv('data/test_df_scored.csv')
 
@@ -89,3 +90,10 @@ print(final_test_df.groupby('Class')['FraudProbability'].describe())
 # Save for Day 4 validation
 final_test_df.to_csv('data/final_test_scored.csv', index=False)
 print("Saved final scored test set.")
+
+joblib.dump(clf, 'data/fraud_model.pkl')
+print("Saved trained model to data/fraud_model.pkl")
+
+# Also save the robust baselines, needed to compute RobustMahalanobisDist for new transactions
+joblib.dump(robust_baselines, 'data/robust_baselines.pkl')
+print("Saved robust baselines to data/robust_baselines.pkl")
