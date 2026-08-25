@@ -4,6 +4,13 @@ from sklearn.model_selection import train_test_split
 
 df = pd.read_csv('data/creditcard.csv')
 
+before_dedup = len(df)
+v_cols = [f'V{i}' for i in range(1, 29)]
+before_dedup = len(df)
+df = df.drop_duplicates(subset=v_cols, keep='first').reset_index(drop=True)
+print(f"Removed {before_dedup - len(df)} duplicate rows ({before_dedup} -> {len(df)})")
+
+
 print(df.shape)
 print(df.columns.tolist())
 print(df['Class'].value_counts())
