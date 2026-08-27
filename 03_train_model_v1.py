@@ -1,3 +1,10 @@
+# NOTE: This is the original 2-feature model (superseded).
+# See 05_model_final.py for the corrected, final version — includes
+# the leakage fix (deduplication on V1-V28) and the expanded 9-feature
+# set validated via point-biserial correlation. Kept here to show the
+# iteration history.
+
+
 import pandas as pd
 import numpy as np
 from scipy.spatial.distance import mahalanobis
