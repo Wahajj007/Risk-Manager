@@ -7,6 +7,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import average_precision_score, precision_score, recall_score, confusion_matrix
 import warnings
 warnings.filterwarnings('ignore', category=RuntimeWarning, module='sklearn.covariance')
+import joblib
 
 normal_train_raw = pd.read_csv('data/normal_train.csv')
 fraud_and_normal = pd.read_csv('data/test_df_scored.csv')  # has both classes with Class label
@@ -131,3 +132,14 @@ print(f"explore.py last run should be very recent if the fix took effect")
 normal_train_check = pd.read_csv('data/normal_train.csv')
 dedup_check_in_file = normal_train_check.duplicated(subset=v_only_cols).sum()
 print(f"Duplicates remaining WITHIN the saved normal_train.csv: {dedup_check_in_file}")
+
+joblib.dump(clf_v2, 'data/fraud_model.pkl')
+joblib.dump(robust_baselines_v2, 'data/robust_baselines.pkl')
+print("Saved corrected 9-feature model and baselines (overwriting the old 2-feature versions)")
+
+final_test_v2 = final_test_v2.rename(columns={
+    'RobustMahalanobisDist_v2': 'RobustMahalanobisDist',
+    'FraudProbability_v2': 'FraudProbability'
+})
+final_test_v2.to_csv('data/final_test_scored.csv', index=False)
+print("Overwrote final_test_scored.csv with 9-feature model predictions")

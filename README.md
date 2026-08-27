@@ -30,11 +30,13 @@ The dataset's own documentation confirms user/entity identifiers were deliberate
 1. Download `creditcard.csv` from Kaggle into `data/`.
 2. Run the pipeline in order to regenerate all intermediate data:
 
-python explore.py # loads data, builds cohorts, train/test split
-python mod2.py # naive + robust Mahalanobis distance
-python mod3.py # trains the logistic regression model, saves fraud_model.pkl
-python mod4.py # precision/recall, calibration, cost-based threshold analysis
-python graph.py # fraud-ring graph construction, community detection, visualizations
+python 01_data_prep.py         # loads data, deduplicates, builds cohorts, train/test split
+python 02_anomaly_detection.py  # naive + robust Mahalanobis distance
+python 03_train_model_v1.py     # original 2-feature model (superseded, kept for history)
+python 04_validation.py         # precision/recall, calibration, cost-based threshold analysis
+python 05_model_final.py        # feature validation, leakage fix, final 9-feature model + AUPRC
+python 06_fraud_rings.py        # fraud-ring graph construction, community detection, visualizations
+
 
 3. Launch the dashboard:
 
