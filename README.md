@@ -1,6 +1,6 @@
 # Fraud Radar
 
-An end-to-end **data science and machine learning pipeline for transaction fraud detection**, built for Razorpay's Buildathon — Track 2: AI Risk Manager.
+An end-to-end data science and machine learning pipeline for transaction fraud detection
 
 The project focuses on turning raw transaction data into statistically validated, interpretable fraud-risk signals. It combines **exploratory data analysis, robust statistical methods, feature validation, supervised machine learning, unsupervised learning, model evaluation, and deployment** into a complete analytical workflow.
 
@@ -24,7 +24,7 @@ The raw transaction dataset is cleaned and prepared before modeling. This includ
 
 The dataset contains approximately **275,000 transactions and 473 confirmed fraudulent transactions**, making fraud detection a highly imbalanced classification problem.
 
-### 2. Robust Statistical Anomaly Detection
+2. Robust Statistical Anomaly Detection
 
 Instead of treating every observation equally, the project first establishes statistically robust measures of how unusual a transaction is relative to its cohort.
 
